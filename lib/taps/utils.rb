@@ -34,6 +34,15 @@ module Utils
 		data.unpack("m").first
 	end
 
+	def filter_rows(rows, filter_columns)
+		Taps.log.debug(rows.inspect)
+		rows.map do |row|
+			row.delete_if{ |column, value| filter_columns.include?(column) }
+		end
+		Taps.log.debug(rows.inspect)
+		rows
+	end
+
 	def format_data(data, opts={})
 		return {} if data.size == 0
 		string_columns = opts[:string_columns] || []

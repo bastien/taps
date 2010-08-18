@@ -294,7 +294,9 @@ class DataStreamKeyed < DataStream
 
 	def fetch_rows
 		chunksize = state[:chunksize]
-		Taps::Utils.format_data(fetch_buffered(chunksize) || [],
+		rows = fetch_buffered(chunksize) || []
+		filtered_rows = Taps::Utils.filter_rows(rows, Taps::Config.filter.select{|f| f[0] == @state[:table_name]}.map{|f| f[1].to_sym})
+		Taps::Utils.format_data(filtered_rows,
 			:string_columns => string_columns)
 	end
 

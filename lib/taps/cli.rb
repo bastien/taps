@@ -50,6 +50,7 @@ class Cli
 		Taps::Config.database_url = opts[:database_url]
 		Taps::Config.login = opts[:login]
 		Taps::Config.password = opts[:password]
+		Taps::Config.filter = opts[:filter]
 
 		Taps::Config.verify_database_url
 		require 'taps/server'
@@ -86,6 +87,7 @@ EOHELP
 
 			o.on("-p", "--port=N", "Server Port") { |v| opts[:port] = v.to_i if v.to_i > 0 }
 			o.on("-d", "--debug", "Enable Debug Messages") { |v| opts[:debug] = true }
+			o.on("-f", "--filter=T1:C1,T2:C3", "Filter columns") { |v| opts[:filter] = serverfilterparse(v) }
 			o.parse!(argv)
 
 			opts[:database_url] = argv.shift
@@ -109,6 +111,10 @@ EOHELP
 			end
 		end
 		opts
+	end
+
+	def serverfilterparse(filters = "")
+		filters.split(',').map{ |filter| filter.split(':') }
 	end
 
 	def clientoptparse(cmd)
