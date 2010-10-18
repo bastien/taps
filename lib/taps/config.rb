@@ -32,7 +32,15 @@ module Taps
 			attr_accessor :taps_database_url
 			attr_accessor :login, :password, :database_url, :remote_url
 			attr_accessor :chunksize
-			attr_accessor :filter
+
+      def filter=(filter)
+        @filter = filter
+      end
+      
+      def filter
+        return ".*" if @filter.nil?
+        @filter
+      end
 
 			def verify_database_url(db_url=nil)
 				db_url ||= self.database_url
